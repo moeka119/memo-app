@@ -1,0 +1,22 @@
+body {
+    margin: 0;
+    padding: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f7f7f7;
+}
+
+h1 {
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+textarea {
+    width: 100%;
+    height: calc(100vh - 80px);
+    font-size: 16px;
+    padding: 12px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    resize: none;
+}

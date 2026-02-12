@@ -9,16 +9,24 @@
 </head>
 
 <body>
-    <h1>メモ帳</h1>
+   <h1>メモ帳</h1>
 
-    <button id="newMemo">＋ 新規メモ</button>
+<!-- 一覧画面 -->
+<div id="listView">
+  <button id="newMemo">＋ 新規メモ</button>
+  <ul id="memoList"></ul>
+</div>
 
-    <ul id="memoList"></ul>
+<!-- 編集画面 -->
+<div id="editView" style="display:none;">
+  <button id="backToList">← 一覧へ戻る</button>
+  <p id="date"></p>
+  <textarea id="memo" placeholder="ここにメモを書く…"></textarea>
+</div>
 
-    <p id="date"></p>
-    <textarea id="memo" placeholder="ここにメモを書く…"></textarea>
+<script src="script.js"></script>
 
-    <script src="script.js"></script>
 </body>
+
 
 </html>

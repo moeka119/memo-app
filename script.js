@@ -1,39 +1,38 @@
 const STORAGE_KEY = "memos";
 
+const listView = document.getElementById("listView");
+const editView = document.getElementById("editView");
+
 const memoEl = document.getElementById("memo");
 const dateEl = document.getElementById("date");
 const memoListEl = document.getElementById("memoList");
-const newMemoBtn = document.getElementById("newMemo");
 
-// UUID生成
+const newMemoBtn = document.getElementById("newMemo");
+const backBtn = document.getElementById("backToList");
+
+// UUID
 function generateId() {
   return crypto.randomUUID();
 }
 
 // 日時フォーマット
-function formatDate(timestamp) {
-  const d = new Date(timestamp);
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  const h = String(d.getHours()).padStart(2, "0");
-  const min = String(d.getMinutes()).padStart(2, "0");
-  return `${y}-${m}-${day} ${h}:${min}`;
+function formatDate(ts) {
+  const d = new Date(ts);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}
+ ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
 }
 
-// 読み込み
+// load / save
 function loadMemos() {
   const data = localStorage.getItem(STORAGE_KEY);
-  if (!data) return [];
-  return JSON.parse(data);
+  return data ? JSON.parse(data) : [];
 }
 
-// 保存
 function saveMemos() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(memos));
 }
 
-// メモ生成
+// 作成
 function createMemo() {
   return {
     id: generateId(),
@@ -50,36 +49,42 @@ function renderList() {
     li.textContent = formatDate(memo.createdAt);
     li.style.cursor = "pointer";
 
-    if (memo.id === currentMemo.id) {
-      li.style.fontWeight = "bold";
-    }
-
-    li.addEventListener("click", () => {
-      selectMemo(memo.id);
-    });
+    li.onclick = () => {
+      openMemo(memo.id);
+    };
 
     memoListEl.appendChild(li);
   });
 }
 
-// メモ選択
-function selectMemo(id) {
+// メモを開く
+function openMemo(id) {
   currentMemo = memos.find(m => m.id === id);
   memoEl.value = currentMemo.content;
   dateEl.textContent = `作成日時：${formatDate(currentMemo.createdAt)}`;
+  showEdit();
+}
+
+// 画面切り替え
+function showList() {
   renderList();
+  listView.style.display = "block";
+  editView.style.display = "none";
+}
+
+function showEdit() {
+  listView.style.display = "none";
+  editView.style.display = "block";
 }
 
 // 初期化
 let memos = loadMemos();
 if (memos.length === 0) {
-  const first = createMemo();
-  memos.push(first);
+  memos.push(createMemo());
   saveMemos();
 }
-
 let currentMemo = memos[0];
-selectMemo(currentMemo.id);
+showList();
 
 // 入力保存
 memoEl.addEventListener("input", () => {
@@ -87,11 +92,19 @@ memoEl.addEventListener("input", () => {
   saveMemos();
 });
 
-// 新規メモ
-newMemoBtn.addEventListener("click", () => {
+// 新規
+newMemoBtn.onclick = () => {
   const memo = createMemo();
-  memos.unshift(memo); // 新しいのを上に
+  memos.unshift(memo);
   saveMemos();
-  selectMemo(memo.id);
-});
+  openMemo(memo.id);
+};
+
+// 戻る
+backBtn.onclick = () => {
+  showList();
+};
+
+ 
+
 
